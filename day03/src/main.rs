@@ -6,8 +6,8 @@ fn main() {
     let part1_res = part1(&input);
     println!("Part 1: {}", part1_res);
 
-    // let part2_res = part2(&input);
-    // println!("Part 2: {}", part2_res);
+    let part2_res = part2(&input);
+    println!("Part 2: {}", part2_res);
 }
 
 fn part1(input: &str) -> u32 {
@@ -28,6 +28,45 @@ fn part1(input: &str) -> u32 {
             }
         }
         total_joltage += max_bank_joltage;
+    }
+
+    total_joltage
+}
+
+fn max_joltage_12_digits(line: &str) -> Vec<u32> {
+
+    let k = 12;
+    let mut result: Vec<u32> = Vec::new();
+    let mut remaining = line.len();
+
+    for c in line.chars() {
+        let digit = c.to_digit(10).unwrap();
+        remaining -= 1;
+
+        while !result.is_empty() && *result.last().unwrap() < digit && result.len() + remaining >= k {
+            result.pop();
+        }
+
+        if result.len() < k {
+            result.push(digit);
+        }
+    }
+
+    result
+ 
+}
+
+fn part2(input: &str) -> u64 {
+    let mut total_joltage = 0;
+
+    for line in input.lines() {
+        let digits = max_joltage_12_digits(line);
+
+        let mut max_joltage: u64 = 0;
+        for d in digits {
+            max_joltage = max_joltage * 10 + d as u64;
+        }
+        total_joltage += max_joltage;
     }
 
     total_joltage
